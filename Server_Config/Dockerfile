@@ -1,17 +1,17 @@
-FROM php:7.4-cli
+# Dockerfile para aplicação NodeJS com express
+# Autor: "Edson Lourenço"
 
-WORKDIR /www
+FROM node
 
-RUN apt-get update && \
-    apt-get install libzip-dev -y && \
-    docker-php-ext-install zip
+WORKDIR /app
 
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    php composer-setup.php && \
-    php -r "unlink('composer-setup.php');"
+# Adiciona o pacote express
 
-RUN php composer.phar create-project --prefer-dist laravel/laravel laravel
+COPY ../app/ /app/
 
-ENTRYPOINT [ "php","laravel/artisan","serve" ]
-CMD [ "--host=0.0.0.0" ]
+RUN npm install package.json --save
+
+EXPOSE 8080
+
+CMD [ "node", "app.js" ]
 
